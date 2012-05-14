@@ -1,29 +1,29 @@
 MAKENSIS="C:/Program Files/NSIS/makensis"
 
-all: py25 py26
-
-py24: MAKE_PYTHONVERSION=2.4
-py24: MAKE_PYTHONDIR=Python24
-py24: clean create-setup
-
-py25: MAKE_PYTHONVERSION=2.5
-py25: MAKE_PYTHONDIR=Python25
-py25: create-setup-from-export
+EXPORT_DIR=$(TEMP)/turtle-rural-export
 
 py26: MAKE_PYTHONVERSION=2.6
 py26: MAKE_PYTHONDIR=Python26
 py26: create-setup-from-export
 
+py25: MAKE_PYTHONVERSION=2.5
+py25: MAKE_PYTHONDIR=Python25
+py25: create-setup-from-export
+
+py24: MAKE_PYTHONVERSION=2.4
+py24: MAKE_PYTHONDIR=Python24
+py24: clean create-setup
+
 create-setup-from-export: export-tag install-wininst
-	# cd $(TEMP)/turtle-rural-export/wininst; make create-setup
+	cd $(EXPORT_DIR)/wininst;
 
 export-tag:
-	- rm -rf $(TEMP)/turtle-rural-export
-	svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-rural/tags/$(TAGGED_VERSION) $(TEMP)/turtle-rural-export
+	- rm -rf $(EXPORT_DIR)
+	svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-rural/tags/$(TAGGED_VERSION) $(EXPORT_DIR)
 
 install-wininst:
-	- rm -rf $(TEMP)/turtle-rural-export/wininst/*
-	cp * $(TEMP)/turtle-rural-export/wininst
+	- rm -rf $(EXPORT_DIR)/wininst/*
+	cp * $(EXPORT_DIR)/wininst
 
 create-setup: clean
 	cp turtle-rural.nsi autogen-turtle-rural.nsi
