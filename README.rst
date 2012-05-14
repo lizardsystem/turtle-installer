@@ -1,7 +1,7 @@
 turtle-installer
 ================
 
-This repo contains a Makefile and supporting code to create an Windows
+This repo contains a Makefile and supporting code to create a Windows
 installer for the different flavors of Turtle, e.g. Turtle-rural, Turtle-urban
 or Turtle-flooding.
 
@@ -25,7 +25,7 @@ Usage
 -----
 
 The actual Makefile you use to create the installer is stored in the wininst
-subdirectory, so::
+subdirectory, so first change to that directory::
 
   cd turtle-installer/wininst
 
@@ -35,9 +35,9 @@ example 'rural' or 'urban' (loose the quotes), and the tag version, for example
 
   make TURTLE_EDITION=rural TAGGED_VERSION=3.1
 
-This make command creates a Windows installer for an export of the specified
-version of the Turtle edition. This export is placed in a subdirectory of the
-TEMP directory that is named::
+That command creates a Windows installer for an export of the specified version
+of the Turtle edition. This export is placed in a subdirectory of the TEMP
+directory that is named::
 
   Turtle-$(TURTLE_EDITION)-export
 
@@ -46,15 +46,15 @@ build successfully, the Windows installer setup can be found in::
 
   Turtle-$(TURTLE_EDITION)-export\wininst
 
-named::
+and is named::
 
   Turtle-$(TURTLE_EDITION)-setup-python2.6.exe
 
 By default, the Makefile creates an installer for Python version 2.6. You can
 supply the option ``py25`` to the Makefile to specify that the installer should
 be build for Python version 2.5. One can also supply the option ``py24`` but it
-is not officially supported. Chances are some of the libraries Turtle depends
-on need a more recent Python version.
+is not officially supported. Chances are that some of the libraries Turtle
+depends on need a more recent Python version.
 
 Prerequisites
 -------------
