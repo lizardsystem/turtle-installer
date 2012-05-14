@@ -14,15 +14,6 @@ py26: MAKE_PYTHONVERSION=2.6
 py26: MAKE_PYTHONDIR=Python26
 py26: create-setup-from-export
 
-clean:
-	- rm -rf ../downloads
-	- rm -rf ../eggs
-	- rm -rf ../bin
-	mkdir ../downloads
-	mkdir ../downloads/dist
-	mkdir ../eggs
-	mkdir ../bin
-
 create-setup-from-export: export-tag install-wininst
 	# cd $(TEMP)/turtle-rural-export/wininst; make create-setup
 
@@ -59,3 +50,12 @@ create-setup: clean
 	cd ..; bin/buildout buildout:download-cache=downloads buildout:include-site-packages=false
 	$(MAKENSIS) autogen-turtle-rural.nsi
 	mv turtle-rural-setup.exe turtle-rural-setup-python$(MAKE_PYTHONVERSION).exe
+
+clean:
+	- rm -rf ../downloads
+	- rm -rf ../eggs
+	- rm -rf ../bin
+	mkdir ../downloads
+	mkdir ../downloads/dist
+	mkdir ../eggs
+	mkdir ../bin
