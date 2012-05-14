@@ -90,3 +90,16 @@ command-line version of the svn utilities.
 The repo that contains this document is a Git repo, officially stored at
 https://github.com/lizardsystem/turtle-installer. We use the Git command-line
 utilities from `msysgit <https://code.google.com/p/msysgit/>`_.
+
+The Makefile exports the specified flavor and tag of Turtle to a subdirectory
+of the directory stored in environment variable TEMP. That directory should be
+present in Windows but it is not easy to locate. For example, in my current
+Windows environment, the TEMP directory is::
+
+  C:\Users\PIETER~1.SWI\AppData\Local\Temp
+
+It is easy to override this directory when you invoke make, for example::
+
+  make TURTLE_EDITION=rural TAGGED_VERSION=3.1 TEMP=C:\tmp
+
+The Makefile does assume this directory exists.
