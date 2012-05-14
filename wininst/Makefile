@@ -5,6 +5,8 @@ EXPORT_DIR=$(TEMP)/turtle-rural-export
 # Make sure the following variables are passed through to sub-makes.
 export MAKE_PYTHONVERSION
 export MAKE_PYTHONDIR
+export TURTLE_EDITION
+export TAGGED_VERSION
 
 py26: MAKE_PYTHONVERSION=2.6
 py26: MAKE_PYTHONDIR=Python26
@@ -18,8 +20,22 @@ py24: MAKE_PYTHONVERSION=2.4
 py24: MAKE_PYTHONDIR=Python24
 py24: create-setup-from-export
 
-create-setup-from-export: export-tag install-wininst
+create-setup-from-export: check-turtle-edition check-tagged-version export-tag install-wininst
 	cd $(EXPORT_DIR)/wininst; make create-setup
+
+check-turtle-edition:
+ifndef TURTLE_EDITION
+	@echo "Please specify the edition of Turtle for which you want to build the Windows"
+	@echo "installer, e.g. 'make TURTLE_EDITION=rural TAGGED_VERSION=3.1'"
+	false
+endif
+
+check-tagged-version:
+ifndef TAGGED_VERSION
+	@echo "Please specify the tag of the Turtle version for which you want to build the"
+	@echo "Windows installer, e.g. 'make TURTLE_EDITION=rural TAGGED_VERSION=3.1'"
+	false
+endif
 
 export-tag:
 	- rm -rf $(EXPORT_DIR)
