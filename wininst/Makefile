@@ -2,6 +2,7 @@ MAKENSIS="C:/Program Files/NSIS/makensis"
 
 EXPORT_DIR=$(TEMP)/turtle-rural-export
 
+# Make sure the following variables are passed through to sub-makes.
 export MAKE_PYTHONVERSION
 export MAKE_PYTHONDIR
 
@@ -29,7 +30,6 @@ install-wininst:
 	cp * $(EXPORT_DIR)/wininst
 
 create-setup: clean
-	echo $(MAKE_PYTHONVERSION), $(MAKE_PYTHONDIR), $(EXPORT_DIR)
 	cp turtle-rural.nsi autogen-turtle-rural.nsi
 	# If setuptools is installed as a site package, which is
 	# required by zest.releaser, the execution of buildout in this
