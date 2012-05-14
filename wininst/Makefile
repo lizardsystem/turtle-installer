@@ -23,6 +23,9 @@ clean:
 	mkdir ../eggs
 	mkdir ../bin
 
+create-setup-from-export: export-tag install-wininst
+	# cd $(TEMP)/turtle-rural-export/wininst; make create-setup
+
 export-tag:
 	- rm -rf $(TEMP)/turtle-rural-export
 	svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-rural/tags/$(TAGGED_VERSION) $(TEMP)/turtle-rural-export
@@ -30,9 +33,6 @@ export-tag:
 install-wininst:
 	- rm -rf $(TEMP)/turtle-rural-export/wininst/*
 	cp * $(TEMP)/turtle-rural-export/wininst
-
-create-setup-from-export: export-tag install-wininst
-	# cd $(TEMP)/turtle-rural-export/wininst; make clean create-setup
 
 create-setup: clean
 	cp turtle-rural.nsi autogen-turtle-rural.nsi
