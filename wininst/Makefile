@@ -1,6 +1,6 @@
 MAKENSIS="C:/Program Files/NSIS/makensis"
 
-EXPORT_DIR=$(TEMP)/turtle-rural-export
+EXPORT_DIR=$(TEMP)/turtle-$(TURTLE_EDITION)-export
 
 # Make sure the following variables are passed through to sub-makes.
 export MAKE_PYTHONVERSION
@@ -39,14 +39,14 @@ endif
 
 export-tag:
 	- rm -rf $(EXPORT_DIR)
-	svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-rural/tags/$(TAGGED_VERSION) $(EXPORT_DIR)
+	svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-$(TURTLE_EDITION)/tags/$(TAGGED_VERSION) $(EXPORT_DIR)
 
 install-wininst:
 	- rm -rf $(EXPORT_DIR)/wininst/*
 	cp * $(EXPORT_DIR)/wininst
 
 create-setup: clean
-	cp turtle-rural.nsi autogen-turtle-rural.nsi
+	cp turtle-rural.nsi autogen-turtle-$(TURTLE_EDITION).nsi
 	# If setuptools is installed as a site package, which is
 	# required by zest.releaser, the execution of buildout in this
 	# Makefile will not download it. However, the execution of
@@ -60,16 +60,17 @@ create-setup: clean
 	cp setuptools*.egg ../eggs
 	# we escape the dollar sign in the following sed regular expressions,
 	# see the '$$', otherwise make would try to expand them
-	sed -i 's/\(StrCpy $$PYTHONVERSION[ ][ ]*\).*/\1"$(MAKE_PYTHONVERSION)"/' autogen-turtle-rural.nsi
-	sed -i 's/\(StrCpy $$PYTHONDIR[ ][ ]*\).*/\1"C:\\$(MAKE_PYTHONDIR)"/' autogen-turtle-rural.nsi
-	sed -i 's/\(zc.buildout-[0-9]*[.][0-9]*[.][0-9]*-py\)[0-9]*[.][0-9]*/\1$(MAKE_PYTHONVERSION)/' autogen-turtle-rural.nsi
+	sed -i 's/rural/$(TURTLE_EDITION)/g' autogen-turtle-$(TURTLE_EDITION).nsi
+	sed -i 's/\(StrCpy $$PYTHONVERSION[ ][ ]*\).*/\1"$(MAKE_PYTHONVERSION)"/' autogen-turtle-$(TURTLE_EDITION).nsi
+	sed -i 's/\(StrCpy $$PYTHONDIR[ ][ ]*\).*/\1"C:\\$(MAKE_PYTHONDIR)"/' autogen-turtle-$(TURTLE_EDITION).nsi
+	sed -i 's/\(zc.buildout-[0-9]*[.][0-9]*[.][0-9]*-py\)[0-9]*[.][0-9]*/\1$(MAKE_PYTHONVERSION)/' autogen-turtle-$(TURTLE_EDITION).nsi
 	# we use a forward slash as a directory separator in the shell commands
 	# as the shell used by make does not like the backslash (or double
 	# backslash) as one
 	cd ..; c:/$(MAKE_PYTHONDIR)/python bootstrap.py
 	cd ..; bin/buildout buildout:download-cache=downloads buildout:include-site-packages=false
-	$(MAKENSIS) autogen-turtle-rural.nsi
-	mv turtle-rural-setup.exe turtle-rural-setup-python$(MAKE_PYTHONVERSION).exe
+	$(MAKENSIS) autogen-turtle-$(TURTLE_EDITION).nsi
+	mv turtle-$(TURTLE_EDITION)-setup.exe turtle-$(TURTLE_EDITION)-setup-python$(MAKE_PYTHONVERSION).exe
 
 clean:
 	- rm -rf ../downloads
