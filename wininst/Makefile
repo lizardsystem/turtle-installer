@@ -32,7 +32,7 @@ export-tag:
 	svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-rural/tags/$(TAGGED_VERSION) $(TEMP)/turtle-rural-export
 	
 create-setup-from-export: export-tag
-	cd $(TEMP)/turtle-rural-export/wininst; make clean create-setup MAKE_PYTHONVERSION=$MAKE_PYTHONVERSION MAKE_PYTHONDIR=$MAKE_PYTHONDIR
+	cd $(TEMP)/turtle-rural-export/wininst; make clean create-setup MAKE_PYTHONVERSION=$(MAKE_PYTHONVERSION) MAKE_PYTHONDIR=$(MAKE_PYTHONDIR)
 	
 create-setup: clean
 	cp turtle-rural.nsi autogen-turtle-rural.nsi
