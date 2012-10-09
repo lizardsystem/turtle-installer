@@ -4,7 +4,7 @@ all: py26
 
 py24: MAKE_PYTHONVERSION=2.4
 py24: MAKE_PYTHONDIR=Python24
-py24: clean create-setup
+py24: create-setup-from-export
 
 py25: MAKE_PYTHONVERSION=2.5
 py25: MAKE_PYTHONDIR=Python25
@@ -14,10 +14,9 @@ py26: MAKE_PYTHONVERSION=2.6
 py26: MAKE_PYTHONDIR=Python26
 py26: create-setup-from-export
 
-py27:
-	MAKE_PYTHONVERSION=2.7
-	MAKE_PYTHONDIR=Python27
-	create-setup-from-export
+py27: MAKE_PYTHONVERSION=2.7
+py27: MAKE_PYTHONDIR=Python27
+py27: create-setup-from-export
 
 clean:
 	- rm -rf ../downloads
@@ -29,12 +28,11 @@ clean:
 	mkdir ../bin
 
 export-tag:
-	#- rm -rf $(TEMP)/turtle-rural-export
-	#svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-rural/tags/$(TAGGED_VERSION) $(TEMP)/turtle-rural-export
-	echo "tmp skipped"
+	rm -rf $(TEMP)/turtle-rural-export
+	svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-rural/tags/$(TAGGED_VERSION) $(TEMP)/turtle-rural-export
 	
 create-setup-from-export: export-tag
-	cd $(TEMP)/turtle-rural-export/wininst; make clean create-setup
+	cd $(TEMP)/turtle-rural-export/wininst; make clean create-setup MAKE_PYTHONVERSION=$MAKE_PYTHONVERSION MAKE_PYTHONDIR=$MAKE_PYTHONDIR
 	
 create-setup: clean
 	cp turtle-rural.nsi autogen-turtle-rural.nsi
