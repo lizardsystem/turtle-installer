@@ -1,52 +1,42 @@
 MAKENSIS="C:/Program Files/NSIS/makensis"
 
-EXPORT_DIR=$(TEMP)/turtle-$(TURTLE_EDITION)-export
+all: py26
 
-# Make sure the following variables are passed through to sub-makes.
-export MAKE_PYTHONVERSION
-export MAKE_PYTHONDIR
-export TURTLE_EDITION
-export TAGGED_VERSION
-
-py26: MAKE_PYTHONVERSION=2.6
-py26: MAKE_PYTHONDIR=Python26
-py26: create-setup-from-export
+py24: MAKE_PYTHONVERSION=2.4
+py24: MAKE_PYTHONDIR=Python24
+py24: clean create-setup
 
 py25: MAKE_PYTHONVERSION=2.5
 py25: MAKE_PYTHONDIR=Python25
 py25: create-setup-from-export
 
-py24: MAKE_PYTHONVERSION=2.4
-py24: MAKE_PYTHONDIR=Python24
-py24: create-setup-from-export
+py26: MAKE_PYTHONVERSION=2.6
+py26: MAKE_PYTHONDIR=Python26
+py26: create-setup-from-export
 
-create-setup-from-export: check-turtle-edition check-tagged-version export-tag install-wininst
-	cd $(EXPORT_DIR)/wininst; make create-setup
+py27: MAKE_PYTHONVERSION=2.7
+py27: MAKE_PYTHONDIR=Python27
+py27: create-setup-from-export
 
-check-turtle-edition:
-ifndef TURTLE_EDITION
-	@echo "Please specify the edition of Turtle for which you want to build the Windows"
-	@echo "installer, e.g. 'make TURTLE_EDITION=rural TAGGED_VERSION=3.1'"
-	false
-endif
-
-check-tagged-version:
-ifndef TAGGED_VERSION
-	@echo "Please specify the tag of the Turtle version for which you want to build the"
-	@echo "Windows installer, e.g. 'make TURTLE_EDITION=rural TAGGED_VERSION=3.1'"
-	false
-endif
+clean:
+	- rm -rf ../downloads
+	- rm -rf ../eggs
+	- rm -rf ../bin
+	mkdir ../downloads
+	mkdir ../downloads/dist
+	mkdir ../eggs
+	mkdir ../bin
 
 export-tag:
-	- rm -rf $(EXPORT_DIR)
-	svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-$(TURTLE_EDITION)/tags/$(TAGGED_VERSION) $(EXPORT_DIR)
-
-install-wininst:
-	- rm -rf $(EXPORT_DIR)/wininst/*
-	cp * $(EXPORT_DIR)/wininst
-
+	#- rm -rf $(TEMP)/turtle-rural-export
+	#svn export https://office.nelen-schuurmans.nl/svn/Products/Turtle/turtle-rural/tags/$(TAGGED_VERSION) $(TEMP)/turtle-rural-export
+	echo "tmp skipped"
+	
+create-setup-from-export: export-tag
+	cd $(TEMP)/turtle-rural-export/wininst; make clean create-setup
+	
 create-setup: clean
-	cp turtle-rural.nsi autogen-turtle-$(TURTLE_EDITION).nsi
+	cp turtle-rural.nsi autogen-turtle-rural.nsi
 	# If setuptools is installed as a site package, which is
 	# required by zest.releaser, the execution of buildout in this
 	# Makefile will not download it. However, the execution of
@@ -60,23 +50,13 @@ create-setup: clean
 	cp setuptools*.egg ../eggs
 	# we escape the dollar sign in the following sed regular expressions,
 	# see the '$$', otherwise make would try to expand them
-	sed -i 's/rural/$(TURTLE_EDITION)/g' autogen-turtle-$(TURTLE_EDITION).nsi
-	sed -i 's/\(StrCpy $$PYTHONVERSION[ ][ ]*\).*/\1"$(MAKE_PYTHONVERSION)"/' autogen-turtle-$(TURTLE_EDITION).nsi
-	sed -i 's/\(StrCpy $$PYTHONDIR[ ][ ]*\).*/\1"C:\\$(MAKE_PYTHONDIR)"/' autogen-turtle-$(TURTLE_EDITION).nsi
-	sed -i 's/\(zc.buildout-[0-9]*[.][0-9]*[.][0-9]*-py\)[0-9]*[.][0-9]*/\1$(MAKE_PYTHONVERSION)/' autogen-turtle-$(TURTLE_EDITION).nsi
+	sed -i 's/\(StrCpy $$PYTHONVERSION[ ][ ]*\).*/\1"$(MAKE_PYTHONVERSION)"/' autogen-turtle-rural.nsi
+	sed -i 's/\(StrCpy $$PYTHONDIR[ ][ ]*\).*/\1"C:\\$(MAKE_PYTHONDIR)"/' autogen-turtle-rural.nsi
+	sed -i 's/\(zc.buildout-[0-9]*[.][0-9]*[.][0-9]*-py\)[0-9]*[.][0-9]*/\1$(MAKE_PYTHONVERSION)/' autogen-turtle-rural.nsi
 	# we use a forward slash as a directory separator in the shell commands
 	# as the shell used by make does not like the backslash (or double
 	# backslash) as one
 	cd ..; c:/$(MAKE_PYTHONDIR)/python bootstrap.py
 	cd ..; bin/buildout buildout:download-cache=downloads buildout:include-site-packages=false
-	$(MAKENSIS) autogen-turtle-$(TURTLE_EDITION).nsi
-	mv turtle-$(TURTLE_EDITION)-setup.exe turtle-$(TURTLE_EDITION)-setup-python$(MAKE_PYTHONVERSION).exe
-
-clean:
-	- rm -rf ../downloads
-	- rm -rf ../eggs
-	- rm -rf ../bin
-	mkdir ../downloads
-	mkdir ../downloads/dist
-	mkdir ../eggs
-	mkdir ../bin
+	$(MAKENSIS) autogen-turtle-rural.nsi
+	mv turtle-rural-setup.exe turtle-rural-setup-python$(MAKE_PYTHONVERSION).exe
