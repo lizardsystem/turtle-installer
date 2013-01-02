@@ -1,0 +1,6 @@
+old
+lib-*/*
+src/*
+wininst/turtle-rural-setup-*.exe
+wininst/turtle-urban-setup-*.exe
+wininst/stubs
