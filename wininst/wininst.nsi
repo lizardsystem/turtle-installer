@@ -136,6 +136,12 @@ Section "${APPNAME} (required)"
   ; Write the installation path into the registry
   WriteRegStr HKLM "${REGKEY}" "Install_Dir" "$INSTDIR"
 
+  ; Give all authentificated users (BUILTIN\Users) full access on
+  ; the registry key
+  AccessControl::SetOnRegKey HKLM "${REGKEY}" "(S-1-5-32-545)" "FullAccess"
+  Pop $R0
+  DetailPrint "AccessControl message: $R0"
+
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "${REGKEYUNINSTALL}" "DisplayName" "${APPNAME}"
   WriteRegStr HKLM "${REGKEYUNINSTALL}" "Publisher" "${PUBLISHERNAME}"
@@ -148,7 +154,11 @@ SectionEnd
 
 ; Optional section (can be disabled by the user)
 
+!if "${APPNAMESAFE}" == "turtle-rural"
+Section "Vervang gebruikersinstellingen (.ini bestanden)"
+!else
 Section /o "Vervang gebruikersinstellingen (.ini bestanden)"
+!endif
 
   DetailPrint "Bezig met vervangen gebruikersinstellingen..."
 
