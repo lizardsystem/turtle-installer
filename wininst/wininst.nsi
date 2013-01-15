@@ -133,6 +133,10 @@ Section "${APPNAME} (required)"
   SetOutPath "$INSTDIR\${LIBDIRNAME}"
   File /r /x ".git" /x ".svn" /x "_svn" /x "*.pyc" /x "*.pyo" "..\${LIBDIRNAME}\*"
 
+  ; gdal
+  SetOutPath "$INSTDIR\gdal"
+  File /r /x ".git" /x ".svn" /x "_svn" /x "*.pyc" /x "*.pyo" "..\gdal\*"
+
   ; Write the installation path into the registry
   WriteRegStr HKLM "${REGKEY}" "Install_Dir" "$INSTDIR"
 
@@ -207,6 +211,9 @@ Section "Uninstall"
 
   ; libs
   RMDir /r "$INSTDIR\${LIBDIRNAME}"
+
+  ; gdal
+  RMDir /r "$INSTDIR\gdal"
 
   RMDir "$INSTDIR"
 

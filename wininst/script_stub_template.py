@@ -61,6 +61,9 @@ def set_sys_path():
 		logger.info('using %s as lib_dir' % (lib_dir))
 		print 'using %s as lib_dir' % (lib_dir)
 
+		# store the base_dir for later use (eg. so apps can find gdal)
+		os.environ['TURTLE_BASE_DIR'] = base_dir
+
 		# sanity check
 		if not os.path.isdir(lib_dir):
 			raise TurtleException('Could not read from lib_dir (%s)' % (lib_dir))
